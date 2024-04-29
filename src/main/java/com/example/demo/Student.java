@@ -45,10 +45,6 @@ public class Student {
         this.age = age;
     }
 
-    public Student(int i, String maria, String jones, String s) {
-
-    }
-
     public Student() {
 
     }
