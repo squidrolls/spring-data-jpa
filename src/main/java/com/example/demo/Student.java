@@ -38,6 +38,13 @@ public class Student {
     @Column(name = "age", nullable = false)
     private Integer age;
 
+    //Bidirectional
+    @OneToOne(
+            mappedBy = "student",
+            orphanRemoval = true
+    )
+    private StudentIdCard studentIdCard;
+
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -89,16 +96,15 @@ public class Student {
         this.age = age;
     }
 
+
     @Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", Email='" + email + '\'' +
+                ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
     }
-
-
 }

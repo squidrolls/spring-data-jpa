@@ -19,18 +19,42 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository){
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository){
         return args -> {
-            generateRandomStudents(studentRepository);
+//            generateRandomStudents(studentRepository);
 //            sorting(studentRepository);
-            PageRequest pageRequest = PageRequest.of(
-                    0,
-                    5,
-                    Sort.by("firstName").ascending());
-            Page<Student> page = studentRepository.findAll(pageRequest);
-            System.out.println(page);
+//            paging(studentRepository);
+            Faker faker = new Faker();
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@illinois.edu", firstName, lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17, 55));
+
+            StudentIdCard studentIdCard = new StudentIdCard(
+                    "12345678",
+                    student
+            );
+
+            studentIdCardRepository.save(studentIdCard);
+            studentRepository.deleteById(1L);
+            studentRepository.findById(1L).ifPresent(System.out::println);
+            studentIdCardRepository.findById(1L)
+                    .ifPresent(System.out::println);
 
         };
+    }
+
+    private static void paging(StudentRepository studentRepository) {
+        PageRequest pageRequest = PageRequest.of(
+                0,
+                5,
+                Sort.by("firstName").ascending());
+        Page<Student> page = studentRepository.findAll(pageRequest);
+        System.out.println(page);
     }
 
     private static void sorting(StudentRepository studentRepository) {
