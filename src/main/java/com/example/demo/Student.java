@@ -33,7 +33,7 @@ public class Student {
     private String lastName;
 
     @Column(name = "email", nullable = false, columnDefinition = "TEXT")
-    private String Email;
+    private String email;
 
     @Column(name = "age", nullable = false)
     private Integer age;
@@ -41,7 +41,7 @@ public class Student {
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
-        Email = email;
+        this.email = email;
         this.age = age;
     }
 
@@ -78,11 +78,11 @@ public class Student {
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public Integer getAge() {
@@ -99,7 +99,7 @@ public class Student {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", Email='" + Email + '\'' +
+                ", Email='" + email + '\'' +
                 ", age=" + age +
                 '}';
     }
