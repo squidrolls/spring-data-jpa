@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootApplication
@@ -19,7 +20,7 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository, StudentIdCardRepository studentIdCardRepository){
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository){
         return args -> {
 //            generateRandomStudents(studentRepository);
 //            sorting(studentRepository);
@@ -34,16 +35,30 @@ public class Application {
                     email,
                     faker.number().numberBetween(17, 55));
 
+            //do not need the bookRepository, we can save the book
+            //because of the CASCADE in Student
+            student.addBook(new Book("clean code", LocalDateTime.now().minusDays(4)));
+            student.addBook(new Book("Think and Grow Rich", LocalDateTime.now()));
+            student.addBook(new Book("Spring Data JPA", LocalDateTime.now().minusYears(1)));
+
             StudentIdCard studentIdCard = new StudentIdCard(
                     "12345678",
                     student
             );
 
-            studentIdCardRepository.save(studentIdCard);
-            studentRepository.deleteById(1L);
-            studentRepository.findById(1L).ifPresent(System.out::println);
-            studentIdCardRepository.findById(1L)
-                    .ifPresent(System.out::println);
+            student.setStudentIdCard(studentIdCard);
+
+            studentRepository.save(student);
+//            studentRepository.deleteById(1L);
+            studentRepository.findById(1L).ifPresent(s -> {
+                System.out.println("fetch book lazy...");
+                List<Book> books = student.getBooks();
+                books.forEach(book -> System.out.println(
+                        s.getFirstName() + "borrowed " + book.getBookName()));
+
+            });
+//            studentIdCardRepository.findById(1L)
+//                    .ifPresent(System.out::println);
 
         };
     }

@@ -2,6 +2,9 @@ package com.example.demo;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.*;
 
 @Entity(name = "Student")
@@ -41,9 +44,36 @@ public class Student {
     //Bidirectional
     @OneToOne(
             mappedBy = "student",
-            orphanRemoval = true
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private StudentIdCard studentIdCard;
+
+    @OneToMany(
+            mappedBy = "student", //the name in the Book
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch= FetchType.LAZY
+    )
+    private List<Book> books = new ArrayList<>();
+
+    public void addBook(Book book){
+        if(!books.contains(book)){
+            books.add(book);
+            book.setStudent(this);//important
+        }
+    }
+
+    public void removeBook(Book book){
+        if(books.contains(book)){
+            books.remove(book);
+            book.setStudent(null);//important
+        }
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
 
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
@@ -96,6 +126,9 @@ public class Student {
         this.age = age;
     }
 
+    public void setStudentIdCard(StudentIdCard studentIdCard) {
+        this.studentIdCard = studentIdCard;
+    }
 
     @Override
     public String toString() {
