@@ -48,6 +48,11 @@ public class Application {
 
             student.setStudentIdCard(studentIdCard);
 
+//            student.enrollToCourse(new Course("computer scinece", "IT"));
+//            student.enrollToCourse(new Course("database", "IT"));
+            student.addEnrollments(new Enrollment(new EnrollmentId(1L, 1L), student, new Course("computer scinece", "IT"), LocalDateTime.now()));
+            student.addEnrollments(new Enrollment(new EnrollmentId(1L, 2L), student, new Course("database", "IT"), LocalDateTime.now()));
+
             studentRepository.save(student);
 //            studentRepository.deleteById(1L);
             studentRepository.findById(1L).ifPresent(s -> {

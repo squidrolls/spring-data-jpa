@@ -57,6 +57,27 @@ public class Student {
     )
     private List<Book> books = new ArrayList<>();
 
+//    @ManyToMany(
+//            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+//    )
+//    @JoinTable(
+//            name = "enrollment",
+//            joinColumns = @JoinColumn(
+//                    name ="student_id",
+//                    foreignKey = @ForeignKey(name = "enrollment_student_id_fk")
+//            ),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "course_id",
+//                    foreignKey = @ForeignKey(name = "enrollment_course_id_fk")
+//            )
+//    )
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "student" //the one in the enrollment
+    )
+//    private List<Course> courses= new ArrayList<>();
+    private List<Enrollment> enrollments= new ArrayList<>();
+
+
     public void addBook(Book book){
         if(!books.contains(book)){
             books.add(book);
@@ -73,6 +94,21 @@ public class Student {
 
     public List<Book> getBooks() {
         return books;
+    }
+
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    public void addEnrollments(Enrollment enrollment){
+        if(!enrollments.contains(enrollment)){
+            enrollments.add(enrollment);
+        }
+    }
+
+    public void removeEnrollments(Enrollment enrollment){
+        enrollments.remove(enrollment);
     }
 
     public Student(String firstName, String lastName, String email, Integer age) {
@@ -129,6 +165,21 @@ public class Student {
     public void setStudentIdCard(StudentIdCard studentIdCard) {
         this.studentIdCard = studentIdCard;
     }
+
+//    public List<Course> getCourses() {
+//        return courses;
+//    }
+//
+//    public void enrollToCourse(Course course){
+//        courses.add(course);
+//        course.getStudents().add(this);
+//    }
+//
+//    public void unEnrollCourse(Course course){
+//        courses.remove(course);
+//        course.getStudents().remove(this);
+//
+//    }
 
     @Override
     public String toString() {
